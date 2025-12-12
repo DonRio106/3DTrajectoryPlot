@@ -1,15 +1,45 @@
-  - name: Set up Python
-    uses: actions/setup-python@v4
-    with:
-      python-version: ${{ matrix.python-version }}
+ name: CI - smoke
 
-  - name: Install dependencies
-    run: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
-  - name: Run smoke script (headless)
-    env:
-      MPLBACKEND: Agg
-    run: |
-      python example_well_profile_usage.py --traj trajectory.xlsx --plan trajectoryplan.xlsx --units ft --no-plotly
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run smoke script (headless)
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python example_well_profile_usage.py --traj trajectory.xlsx --plan trajectoryplan.xlsx --units ft --no-plotly
+
+      - name: Upload outputs (artifacts)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: well-outputs
+          path: |
+            well*_traj_xyz_*.csv
+            *_plan_xyz_*.csv
+            *_both_3d_plan_*.png
+            *_both_3d_plan_*.html
