@@ -12,4 +12,4 @@
     env:
       MPLBACKEND: Agg
     run: |
-      python example_well_profile_usage.py --traj trajectory.csv --plan trajectoryplan.csv --units ft --no-plotly
+      python example_well_profile_usage.py --traj trajectory.xlsx --plan trajectoryplan.xlsx --units ft --no-plotly
