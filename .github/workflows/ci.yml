@@ -1,4 +1,4 @@
- name: CI - smoke
+name: CI
 
 on:
   push:
