@@ -9,6 +9,7 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
@@ -37,16 +38,17 @@ jobs:
           MPLBACKEND: Agg
         run: |
           set -e
-          python example_well_profile_usage2.py \
+          python example_well_profile_usage_fixed.py \
             --traj trajectory.xlsx \
             --plan trajectoryplan.xlsx \
             --units ft \
             --no-plotly
 
       - name: Validate outputs exist
-  run: |
-    set -e
-    ls *.csv
+        shell: bash
+        run: |
+          set -e
+          ls *.csv
 
       - name: Upload outputs (artifacts)
         if: always()
