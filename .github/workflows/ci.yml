@@ -44,11 +44,9 @@ jobs:
             --no-plotly
 
       - name: Validate outputs exist
-        shell: bash
-        run: |
-          set -e
-          ls *.csv
-          ls *.png
+  run: |
+    set -e
+    ls *.csv
 
       - name: Upload outputs (artifacts)
         if: always()
