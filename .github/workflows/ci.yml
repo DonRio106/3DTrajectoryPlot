@@ -2,14 +2,15 @@ name: CI
 
 on:
   push:
-    branches: main
+    branches: [ main ]
   pull_request:
-    branches: main
+    branches: [ main ]
 
 jobs:
   smoke:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ['3.9', '3.10']
 
@@ -18,28 +19,43 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: pip
 
       - name: Install dependencies
+        shell: bash
         run: |
+          set -e
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run smoke script (headless)
+        shell: bash
         env:
           MPLBACKEND: Agg
         run: |
-          python example_well_profile_usage.py --traj trajectory.xlsx --plan trajectoryplan.xlsx --units ft --no-plotly
+          set -e
+          python example_well_profile_usage_fixed.py \
+            --traj trajectory.xlsx \
+            --plan trajectoryplan.xlsx \
+            --units ft \
+            --no-plotly
+
+      - name: Validate outputs exist
+        shell: bash
+        run: |
+          set -e
+          ls *.csv
+          ls *.png
 
       - name: Upload outputs (artifacts)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: well-outputs
+          name: well-outputs-py${{ matrix.python-version }}
           path: |
-            well*_traj_xyz_*.csv
-            *_plan_xyz_*.csv
-            *_both_3d_plan_*.png
-            *_both_3d_plan_*.html
+            *.csv
+            *.png
+            *.html
