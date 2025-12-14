@@ -13,7 +13,7 @@ Quick start:
    pip install -r requirements.txt
 
 3. Run (example using provided sample CSVs, units in feet):
-   python example_well_profile_usage.py --traj trajectory.csv --plan trajectoryplan.csv --units ft
+   python example_well_profile_usage2.py --traj trajectory.xlsx --plan trajectoryplan.xlsx --units ft
 
 Outputs:
 - well_traj_xyz_<units>.csv
