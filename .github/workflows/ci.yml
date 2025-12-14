@@ -38,7 +38,7 @@ jobs:
           MPLBACKEND: Agg
         run: |
           set -e
-          python example_well_profile_usage_fixed.py \
+          python example_well_profile_usage_fixed2.py \
             --traj trajectory.xlsx \
             --plan trajectoryplan.xlsx \
             --units ft \
